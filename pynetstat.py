@@ -27,13 +27,13 @@ session = Session(hostname=host, community="public", version=2)
 
 # Walk
 if args.p is None:
-    items = session.walk("tcp")
-    for item in session.walk("udp"):
+    items = session.walk("1.3.6.1.2.1.6")
+    for item in session.walk("1.3.6.1.2.1.7"):
         items.append(item)
 elif args.p.lower() == "tcp":
-    items = session.walk("tcp")
+    items = session.walk("1.3.6.1.2.1.6")
 elif args.p.lower() == "udp":
-    items = session.walk("udp")
+    items = session.walk("1.3.6.1.2.1.7")
 else:
     raise Exception
 
@@ -43,7 +43,7 @@ udpdict = {}
 
 if args.p is None or args.p.lower() == 'tcp':
     for item in items:
-        if item.oid == "tcpConnState" and item.value == "5":
+        if item.oid == "1.3.6.1.2.1.6.13.1.1" and item.value == "5":
             tcpdict[item.oid_index] = {
                 "status": "ESTABLISHED",
                 "localAddr": "",
@@ -51,13 +51,13 @@ if args.p is None or args.p.lower() == 'tcp':
                 "localPort": "",
                 "remotePort": "",
             }
-        if item.oid == "tcpConnLocalAddress" and item.oid_index in tcpdict.keys():
+        if item.oid == "1.3.6.1.2.1.6.13.1.2" and item.oid_index in tcpdict.keys():
             tcpdict[item.oid_index]["localAddr"] = item.value
-        if item.oid == "tcpConnRemAddress" and item.oid_index in tcpdict.keys():
+        if item.oid == "1.3.6.1.2.1.6.13.1.4" and item.oid_index in tcpdict.keys():
             tcpdict[item.oid_index]["remoteAddr"] = item.value
-        if item.oid == "tcpConnLocalPort" and item.oid_index in tcpdict.keys():
+        if item.oid == "1.3.6.1.2.1.6.13.1.3" and item.oid_index in tcpdict.keys():
             tcpdict[item.oid_index]["localPort"] = item.value
-        if item.oid == "tcpConnRemPort" and item.oid_index in tcpdict.keys():
+        if item.oid == "1.3.6.1.2.1.6.13.1.5" and item.oid_index in tcpdict.keys():
             tcpdict[item.oid_index]["remotePort"] = item.value
 
     print(
@@ -83,12 +83,12 @@ if args.p is None or args.p.lower() == 'tcp':
 if args.p is None or args.p.lower() == 'udp':
     #print(items)
     for item in items:
-        if item.oid == "udpLocalAddress":
+        if item.oid == "1.3.6.1.2.1.7.5.1.1":
             udpdict[item.oid_index] = {
                 "localAddr": item.value,
                 "localPort": "",
             }
-        if item.oid == "udpLocalPort" and item.oid_index in udpdict.keys():
+        if item.oid == "1.3.6.1.2.1.7.5.1.2" and item.oid_index in udpdict.keys():
             udpdict[item.oid_index]["localPort"] = item.value
 
     print(
@@ -106,7 +106,7 @@ if args.p is None or args.p.lower() == 'udp':
 
 #
 # print(items)
-#
+
 # for item in items:
 #     print(
 #         "{oid}.{oid_index} {snmp_type} = {value}".format(
